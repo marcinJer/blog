@@ -1,5 +1,6 @@
 package com.wojcikjer.blog.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class User {
     private String username;
 
     @Column
+    @JsonIgnore
     private String password;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -27,7 +29,7 @@ public class User {
             name = "followers",
             joinColumns = {@JoinColumn(name = "follower_id")},
             inverseJoinColumns = {@JoinColumn(name = "following_id")}
-    )
+    ) @JsonIgnore
     private Set<User> following = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -39,8 +41,10 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     List<Comment> comments = new ArrayList<>();
 }

@@ -1,5 +1,6 @@
 package com.wojcikjer.blog.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 public class Role {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column @JsonIgnore
     private Long id;
 
     @Column
