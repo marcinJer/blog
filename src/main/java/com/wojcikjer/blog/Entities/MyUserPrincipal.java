@@ -4,16 +4,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class MyUserPrincipal implements UserDetails {
 
-    private User user;
+    private Optional<User> user;
 
-    public MyUserPrincipal(User user) {
+    public MyUserPrincipal(Optional<User> user) {
         this.user = user;
     }
 
-    public User getUser() {
+    public Optional<User> getUser() {
         return user;
     }
 
@@ -24,12 +25,12 @@ public class MyUserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return user.get().getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.get().getUsername();
     }
 
     @Override

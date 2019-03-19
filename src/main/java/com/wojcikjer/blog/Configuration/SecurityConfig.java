@@ -57,11 +57,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().and()
                 .authorizeRequests()
-                .antMatchers("/login").not().authenticated()
+                .antMatchers("/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/users/home", true)
                 .and()
                 .logout();
 
