@@ -1,17 +1,14 @@
 package com.wojcikjer.blog.Controllers;
 
+import com.wojcikjer.blog.Entities.Post;
 import com.wojcikjer.blog.Entities.User;
-import com.wojcikjer.blog.Entities.UserContext;
 import com.wojcikjer.blog.Services.UserService;
+import com.wojcikjer.blog.facades.UserPostFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -19,12 +16,35 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserPostFacade userPostFacade;
 
     @GetMapping
     public ResponseEntity getUsers() {
 
         return new ResponseEntity(userService.findAllUsers(),
                 HttpStatus.OK);
+    }
+
+    @PostMapping("/registration")
+    public ResponseEntity register(@RequestBody User user) {
+        if (user.getId() == null) {
+            try {
+                userService.saveUser(user);
+                return new ResponseEntity(HttpStatus.OK);
+            } catch (DataIntegrityViolationException e) {
+                //empty intentionally
+            }
+        }
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("User already exists");
+    }
+
+    @PostMapping("/{username}/posts")
+    public Post savePost(@PathVariable String username, @RequestBody Post post){
+
+        return userPostFacade.savePostToCurrentUser(username, post);
     }
 
     @GetMapping("/{username}")

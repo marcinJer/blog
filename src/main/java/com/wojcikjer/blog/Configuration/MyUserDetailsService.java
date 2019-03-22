@@ -1,6 +1,6 @@
-package com.wojcikjer.blog.Services;
+package com.wojcikjer.blog.Configuration;
 
-import com.wojcikjer.blog.Entities.MyUserPrincipal;
+import com.wojcikjer.blog.Configuration.MyUserPrincipal;
 import com.wojcikjer.blog.Entities.User;
 import com.wojcikjer.blog.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
@@ -19,11 +20,11 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
-        return new MyUserPrincipal(user);
+        return StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst()
+                .map(user -> new MyUserPrincipal(user))
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
 }

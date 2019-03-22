@@ -1,5 +1,6 @@
-package com.wojcikjer.blog.Entities;
+package com.wojcikjer.blog.Configuration;
 
+import com.wojcikjer.blog.Entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,13 +9,13 @@ import java.util.Optional;
 
 public class MyUserPrincipal implements UserDetails {
 
-    private Optional<User> user;
+    private User user;
 
-    public MyUserPrincipal(Optional<User> user) {
+    public MyUserPrincipal(User user) {
         this.user = user;
     }
 
-    public Optional<User> getUser() {
+    public User getUser() {
         return user;
     }
 
@@ -25,12 +26,12 @@ public class MyUserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.get().getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.get().getUsername();
+        return user.getUsername();
     }
 
     @Override

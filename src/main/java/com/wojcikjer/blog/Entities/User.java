@@ -21,7 +21,7 @@ public class User {
     private String username;
 
     @Column
-    @JsonIgnore
+    //@JsonIgnore
     private String password;
 
     @ManyToMany(cascade = CascadeType.ALL)

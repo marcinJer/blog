@@ -1,16 +1,18 @@
 package com.wojcikjer.blog.Configuration;
 
-import com.wojcikjer.blog.Entities.UserContext;
-import com.wojcikjer.blog.Services.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -54,16 +56,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().and()
+        http.csrf().disable()
+                .headers().frameOptions().disable()
+                .and()
+                .authenticationProvider(daoAuthenticationProvider())
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/blog/users/registration").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .and()
-                .logout();
+                .and().httpBasic()
+                .and().cors()
+                .and().logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .and().sessionManagement().maximumSessions(100).sessionRegistry(sessionRegistry());
+    }
 
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(myUserDetailsService);
+        authenticationProvider.setPasswordEncoder(new PlainTextPasswordEncoder());
+        return authenticationProvider;
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
 }
