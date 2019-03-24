@@ -2,7 +2,6 @@ package com.wojcikjer.blog.Controllers;
 
 import com.wojcikjer.blog.Entities.Post;
 import com.wojcikjer.blog.Entities.User;
-import com.wojcikjer.blog.Services.PostService;
 import com.wojcikjer.blog.Services.UserService;
 import com.wojcikjer.blog.facades.UserPostFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserPostFacade userPostFacade;
-    @Autowired
-    private PostService postService;
 
     @GetMapping
     public ResponseEntity getUsers() {
@@ -45,14 +42,24 @@ public class UserController {
     }
 
     @PostMapping("/{username}/posts")
-    public Post savePost(@PathVariable String username, @RequestBody Post post){
+    public ResponseEntity savePost(@PathVariable String username, @RequestBody Post post) {
 
-        return userPostFacade.savePostToCurrentUser(username, post);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(userPostFacade.savePostToCurrentUser(username, post));
     }
 
     @PutMapping("/{username}/posts/{postId}")
-    public Post editPostById(@PathVariable String username, @PathVariable Long postId, @RequestBody Post post){
-        return userPostFacade.editCurrentUsersPost(username, post, postId);
+    public ResponseEntity editPostById(@PathVariable String username, @PathVariable Long postId, @RequestBody Post post) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userPostFacade.editCurrentUsersPost(username, post, postId));
+    }
+
+    @DeleteMapping("/{username}/posts/{postId}")
+    public ResponseEntity deletePostById(@PathVariable String username, @PathVariable Long postId) {
+        userPostFacade.deleteCurrentUsersPost(username, postId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{username}")

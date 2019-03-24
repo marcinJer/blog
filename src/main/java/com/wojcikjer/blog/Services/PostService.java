@@ -20,12 +20,22 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post editPost(Post updatedPost, Long id){
+    public Post editPostById(Post updatedPost, Long id){
         Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException("Post [id = " + id + "] not found"));
         Optional.ofNullable(updatedPost.getContent()).ifPresent(post::setContent);
         Optional.ofNullable(updatedPost.getUser()).ifPresent(post::setUser);
         Optional.ofNullable(updatedPost.getComments()).ifPresent(post::setComments);
 
         return postRepository.save(post);
+    }
+
+    public void deletePostById(Long id){
+        Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException("Post [id = " + id + "] not found"));
+        postRepository.delete(post);
+    }
+
+    public Post findPostById(Long id){
+        Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException("Post [id = " + id + "] not found"));
+        return post;
     }
 }
