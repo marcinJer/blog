@@ -2,6 +2,7 @@ package com.wojcikjer.blog.Controllers;
 
 import com.wojcikjer.blog.Entities.Post;
 import com.wojcikjer.blog.Entities.User;
+import com.wojcikjer.blog.Services.PostService;
 import com.wojcikjer.blog.Services.UserService;
 import com.wojcikjer.blog.facades.UserPostFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserPostFacade userPostFacade;
+    @Autowired
+    private PostService postService;
 
     @GetMapping
     public ResponseEntity getUsers() {
@@ -45,6 +48,11 @@ public class UserController {
     public Post savePost(@PathVariable String username, @RequestBody Post post){
 
         return userPostFacade.savePostToCurrentUser(username, post);
+    }
+
+    @PutMapping("/{username}/posts/{postId}")
+    public Post editPostById(@PathVariable String username, @PathVariable Long postId, @RequestBody Post post){
+        return userPostFacade.editCurrentUsersPost(username, post, postId);
     }
 
     @GetMapping("/{username}")

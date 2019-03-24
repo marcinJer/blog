@@ -1,13 +1,10 @@
 package com.wojcikjer.blog.Configuration;
 
-import com.wojcikjer.blog.Configuration.MyUserPrincipal;
 import com.wojcikjer.blog.Entities.User;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class UserContext {

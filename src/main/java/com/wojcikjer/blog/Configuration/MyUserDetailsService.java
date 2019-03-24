@@ -1,7 +1,5 @@
 package com.wojcikjer.blog.Configuration;
 
-import com.wojcikjer.blog.Configuration.MyUserPrincipal;
-import com.wojcikjer.blog.Entities.User;
 import com.wojcikjer.blog.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
