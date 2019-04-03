@@ -9,30 +9,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity @Table
-@Data
+@Entity @Table @Data
 public class User {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id private Long id;
 
-    @Column
     private String username;
 
-    @Column
-    @JsonIgnore
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "followers",
             joinColumns = {@JoinColumn(name = "follower_id")},
             inverseJoinColumns = {@JoinColumn(name = "following_id")}
-    ) @JsonIgnore
+    )
     private Set<User> following = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -41,10 +36,9 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
     List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
     List<Comment> comments = new ArrayList<>();
+
 }

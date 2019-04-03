@@ -7,20 +7,15 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity @Table
-@Data
+@Entity @Table @Data
 public class Post {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id private Long id;
 
-    @Column
     private String content;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn
-    @JsonIgnore
+    @ManyToOne
     private User user;
 
     @OneToMany(mappedBy = "post")
